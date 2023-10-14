@@ -18,7 +18,7 @@ import json
 checkpoint = "bert-base-chinese"
 device = 'cuda'
 
-mycheckpoint = "hflw2ner2"
+mycheckpoint = "models/hflw2ner2"
 if not os.path.exists(mycheckpoint):
     os.makedirs(mycheckpoint)
 
@@ -183,14 +183,14 @@ class MYW2NER(BertPreTrainedModel):
             seqlen2sum = torch.sum(seqlen * (seqlen + 1) / 2)
             loss = torch.sum(loss) / seqlen2sum
 
-            # 为实体，预测也为该实体
-            tp = torch.sum(torch.logical_and(torch.gt(span, 0), torch.eq(predict, span)))
+            # 预测为实体，实际为该实体
+            tp = torch.sum(torch.logical_and(torch.gt(predict, 0), torch.eq(predict, span)))
 
-            # 为实体，预测错误
-            fn = torch.sum(torch.logical_and(torch.gt(span, 0), torch.logical_not(torch.eq(predict, span))))
+            # 预测为实体，实际为非实体或非该实体
+            fp = torch.sum(torch.logical_and(torch.gt(predict, 0), torch.logical_not(torch.eq(predict, span))))
 
-            # 非实体，预测为实体
-            fp = torch.sum(torch.logical_and(torch.eq(span, 0), torch.gt(predict, 0)))
+            # 预测非实体，实际为实体
+            fn = torch.sum(torch.logical_and(torch.eq(predict, 0), torch.gt(span, 0)))
 
             return predict, loss, tp, fn, fp
         else:

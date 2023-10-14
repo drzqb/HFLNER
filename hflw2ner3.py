@@ -17,7 +17,7 @@ import json
 checkpoint = "bert-base-chinese"
 device = 'cuda'
 
-mycheckpoint = "hflw2ner3"
+mycheckpoint = "models/hflw2ner3"
 if not os.path.exists(mycheckpoint):
     os.makedirs(mycheckpoint)
 

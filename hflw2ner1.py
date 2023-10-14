@@ -17,7 +17,7 @@ import json
 checkpoint = "bert-base-chinese"
 device = 'cuda'
 
-mycheckpoint = "hflw2ner1"
+mycheckpoint = "models/hflw2ner1"
 if not os.path.exists(mycheckpoint):
     os.makedirs(mycheckpoint)
 
@@ -203,14 +203,14 @@ class MYW2NER(BertPreTrainedModel):
             seqlen2sum = torch.sum(torch.square(seqlen))
             loss = torch.sum(loss) / seqlen2sum
 
-            # 为实体，预测也为该实体
-            tp = torch.sum(torch.logical_and(torch.gt(span, 0), torch.eq(predict, span)))
+            # 预测为实体，实际为该实体
+            tp = torch.sum(torch.logical_and(torch.gt(predict, 0), torch.eq(predict, span)))
 
-            # 为实体，预测错误
-            fn = torch.sum(torch.logical_and(torch.gt(span, 0), torch.logical_not(torch.eq(predict, span))))
+            # 预测为实体，实际为非实体或非该实体
+            fp = torch.sum(torch.logical_and(torch.gt(predict, 0), torch.logical_not(torch.eq(predict, span))))
 
-            # 非实体，预测为实体
-            fp = torch.sum(torch.logical_and(torch.eq(span, 0), torch.gt(predict, 0)))
+            # 预测非实体，实际为实体
+            fn = torch.sum(torch.logical_and(torch.eq(predict, 0), torch.gt(span, 0)))
 
             return predict, loss, tp, fn, fp
         else:
@@ -369,9 +369,9 @@ def inference(sentence):
 
 
 if __name__ == "__main__":
-    # train()
+    train()
 
-    inference("患者精神状况好，无发热，诉右髋部疼痛，饮食差，二便正常。")
-    inference("腹叩移动性浊音阴性，肠鸣音正常，未闻及高调肠鸣音及气过水声。")
-    inference("我肚子有点疼痛。")
-    inference("韩凤科 男 74岁 汉族 已婚 现住双塔山棋盘地村 主因发作性头痛头晕伴左侧肢体无力1天于2016-1-26  11：06入院。")
+    # inference("患者精神状况好，无发热，诉右髋部疼痛，饮食差，二便正常。")
+    # inference("腹叩移动性浊音阴性，肠鸣音正常，未闻及高调肠鸣音及气过水声。")
+    # inference("我肚子有点疼痛。")
+    # inference("韩凤科 男 74岁 汉族 已婚 现住双塔山棋盘地村 主因发作性头痛头晕伴左侧肢体无力1天于2016-1-26  11：06入院。")

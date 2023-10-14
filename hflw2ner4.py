@@ -19,7 +19,7 @@ import json
 checkpoint = "bert-base-chinese"
 device = 'cuda'
 
-mycheckpoint = "hflw2ner4"
+mycheckpoint = "models/hflw2ner4"
 if not os.path.exists(mycheckpoint):
     os.makedirs(mycheckpoint)
 
@@ -66,7 +66,6 @@ def collate_fn(data):
     :param data: 输入batch文本数据
     :return: 返回编码数据
     '''
-    # print(data)
 
     sents = [[j if j in tokenizer.vocab.keys() else "[UNK]" for j in i["context"]] for i in data]
     spans = [i["span_posLabel"] for i in data]
@@ -202,14 +201,14 @@ class MYW2NER(BertPreTrainedModel):
             seqlen2sum = torch.sum(torch.square(seqlen))
             loss = torch.sum(loss) / seqlen2sum
 
-            # 为实体，预测也为该实体
-            tp = torch.sum(torch.logical_and(torch.gt(span, 0), torch.eq(predict, span)))
+            # 实际为实体，预测也为该实体
+            tp = torch.sum(torch.logical_and(torch.gt(predict, 0), torch.eq(predict, span)))
 
-            # 为实体，预测错误
+            # 预测为实体，但预测错误（实际为非实体或非该预测实体）
+            fp = torch.sum(torch.logical_and(torch.gt(predict, 0), torch.logical_not(torch.eq(predict, span))))
+
+            # 实际为实体，但预测错误（预测为非实体或非该实体）
             fn = torch.sum(torch.logical_and(torch.gt(span, 0), torch.logical_not(torch.eq(predict, span))))
-
-            # 非实体，预测为实体
-            fp = torch.sum(torch.logical_and(torch.eq(span, 0), torch.gt(predict, 0)))
 
             return predict, loss, tp, fn, fp
         else:

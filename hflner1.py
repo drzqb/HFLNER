@@ -14,7 +14,7 @@ import numpy as np
 checkpoint = "bert-base-chinese"
 device = 'cuda'
 
-mycheckpoint = "hflner1"
+mycheckpoint = "models/hflner1"
 if not os.path.exists(mycheckpoint):
     os.makedirs(mycheckpoint)
 
@@ -33,6 +33,7 @@ label2id = {
     'DISEASE-B': 10
 }
 id2label = {v: k for k, v in label2id.items()}
+
 
 class MyDataset(Dataset):
     '''
@@ -150,14 +151,16 @@ def TP_compute(predict, label, input_ids, attention_mask):
 
     new_attention_mask = new_attention_mask[:, 1:-1]
 
-    # 为实体，预测也为该实体
-    tp = torch.sum(torch.logical_and(torch.gt(label, 0), torch.eq(predict, label)))
+    predict *= new_attention_mask
 
-    # 为实体，预测错误
-    fn = torch.sum(torch.logical_and(torch.gt(label, 0), torch.logical_not(torch.eq(predict, label))))
+    # 预测为实体，实际为该实体
+    tp = torch.sum(torch.logical_and(torch.gt(predict, 0), torch.eq(predict, label)))
 
-    # 非实体，预测为实体
-    fp = torch.sum(torch.logical_and(torch.eq(label, 0), torch.gt(predict * new_attention_mask, 0)))
+    # 预测为实体，实际为非实体或非该实体
+    fp = torch.sum(torch.logical_and(torch.gt(predict, 0), torch.logical_not(torch.eq(predict, label))))
+
+    # 预测非实体，实际为实体
+    fn = torch.sum(torch.logical_and(torch.eq(predict, 0), torch.gt(label, 0)))
 
     return tp, fn, fp
 
@@ -178,6 +181,8 @@ def train():
     model = MYNER.from_pretrained(checkpoint,
                                   id2label=id2label,
                                   label2id=label2id)
+
+    model.config.__dict__["val_f1"] = []
 
     model.save_pretrained(mycheckpoint)
     tokenizer.save_pretrained(mycheckpoint)
@@ -253,6 +258,8 @@ def train():
               " eval_f1: ", f1,
               )
 
+        model.config.__dict__["val_f1"].append(f1)
+
         model.save_pretrained(mycheckpoint)
 
 
@@ -279,8 +286,8 @@ def inference(sentence):
 
 
 if __name__ == "__main__":
-    # train()
+    train()
 
-    inference("患者精神状况好，无发热，诉右髋部疼痛，饮食差，二便正常。")
-    inference("一般情况可，心肺未见异常。腹平坦，未见胃肠型及蠕动波。上腹部压痛阳性，无反跳痛及肌紧张。肝脾肋下未触及，全腹未触及 异常包块。腹叩移动性浊音阴性，肠鸣音正常，未闻及高调肠鸣音及气过水声。")
-    inference("我肚子有点疼痛。")
+    # inference("患者精神状况好，无发热，诉右髋部疼痛，饮食差，二便正常。")
+    # inference("一般情况可，心肺未见异常。腹平坦，未见胃肠型及蠕动波。上腹部压痛阳性，无反跳痛及肌紧张。肝脾肋下未触及，全腹未触及 异常包块。腹叩移动性浊音阴性，肠鸣音正常，未闻及高调肠鸣音及气过水声。")
+    # inference("我肚子有点疼痛。")
