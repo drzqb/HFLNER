@@ -6,4 +6,4 @@
     
     hflw2ner2-8 基于W2NER的统一框架
         hflw2ner6-7 基于梯度累积
-        hflw2ner8 LoRa微调
+        hflw2ner8 梯度累积 + LoRa微调

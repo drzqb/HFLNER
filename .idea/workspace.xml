@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a2baeb92-07de-4da5-95c1-69a79c1fe5b1" name="默认更改列表" comment="">
-      <change afterPath="$PROJECT_DIR$/hflw2ner8.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hflw2ner7.py" beforeDir="false" afterPath="$PROJECT_DIR$/hflw2ner7.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -171,7 +169,7 @@
       <workItem from="1697208549902" duration="8361000" />
       <workItem from="1697260507040" duration="3882000" />
       <workItem from="1698213727071" duration="7462000" />
-      <workItem from="1698222828524" duration="9876000" />
+      <workItem from="1698222828524" duration="10151000" />
     </task>
     <servers />
   </component>
