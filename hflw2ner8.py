@@ -4,6 +4,8 @@
 
     梯度累加
     梯度按序列长度比率算术平均
+
+    Lora微调
 '''
 
 from transformers import BertTokenizer, BertPreTrainedModel, BertModel
@@ -15,11 +17,15 @@ from torch.optim import AdamW
 from tqdm import tqdm
 import torch, os
 import numpy as np
+from peft import get_peft_model, LoraConfig, TaskType, PeftModel, PeftConfig
+import warnings
+
+warnings.filterwarnings("ignore")
 
 checkpoint = "bert-base-chinese"
 device = 'cuda'
 
-mycheckpoint = "models/hflw2ner7"
+mycheckpoint = "models/hflw2ner8"
 if not os.path.exists(mycheckpoint):
     os.makedirs(mycheckpoint)
 
@@ -35,13 +41,13 @@ label2id = {
 }
 id2label = {v: k for k, v in label2id.items()}
 
-txt_max_len = 510
+txt_max_len = 200
 
-batch_size = 2
-accum_step = 2
+batch_size = 8
+accum_step = 1
 
-num_epochs = 10
-lr = 5e-5
+num_epochs = 20
+lr = 5e-4
 
 
 class MyDataset(Dataset):
@@ -269,23 +275,39 @@ def train():
                                 shuffle=False,
                                 collate_fn=collate_fn)
 
+    lora_config = LoraConfig(r=10)
+    print(lora_config)
+
     model = MYW2NER.from_pretrained(checkpoint,
                                     id2label=id2label,
                                     label2id=label2id)
+    model = get_peft_model(model, lora_config)
+    print(lora_config)
+
+    model.print_trainable_parameters()
+
+    tokenizer = BertTokenizer.from_pretrained(checkpoint)
+
     model.config.__dict__["val_f1"] = []
 
     model.to(device)
-    model.save_pretrained(mycheckpoint)
+    torch.save(model, mycheckpoint + "/pytorch_model.bin")
     tokenizer.save_pretrained(mycheckpoint)
 
     paras_bert = []
     paras_last = []
 
     for k, v in dict(model.named_parameters()).items():
-        if k.startswith("bert"):
+        if "bert" in k:
             paras_bert += [{'params': [v]}]
         else:
             paras_last += [{'params': [v]}]
+
+    for k, v in model.named_parameters():
+        if "fc" in k:
+            v.requires_grad = True
+
+    model.print_trainable_parameters()
 
     oneepoch_stepping_steps = len(dataloader_train)
     num_stepping_steps = num_epochs * oneepoch_stepping_steps
@@ -296,15 +318,15 @@ def train():
         name="linear",
         optimizer=optimizerbert,
         num_training_steps=num_stepping_steps,
-        num_warmup_steps=oneepoch_stepping_steps,
+        num_warmup_steps=num_stepping_steps // 10,
     )
 
-    optimizerlast = AdamW(paras_last, lr=100. * lr, eps=1.0e-6)
+    optimizerlast = AdamW(paras_last, lr=10. * lr, eps=1.0e-6)
     lr_schedulerlast = get_scheduler(
         name="linear",
         optimizer=optimizerlast,
         num_training_steps=num_stepping_steps,
-        num_warmup_steps=oneepoch_stepping_steps,
+        num_warmup_steps=num_stepping_steps // 10,
     )
 
     minisen = dict()
@@ -386,11 +408,13 @@ def train():
 
         model.config.__dict__["val_f1"].append(f1)
 
-        model.save_pretrained(mycheckpoint)
+        torch.save(model, mycheckpoint + "/pytorch_model.bin")
 
 
 def inference(sentence):
     tokenizer = BertTokenizer.from_pretrained(mycheckpoint)
+
+    model = torch.load(mycheckpoint + "/pytorch_model.bin")
 
     sen = [word if word in tokenizer.vocab.keys() else '[UNK]' for word in sentence]
     lsen = len(sen)
@@ -404,7 +428,6 @@ def inference(sentence):
     data.to(device)
     ls = ls.to(device)
 
-    model = MYW2NER.from_pretrained(mycheckpoint)
     model.to(device)
 
     model.eval()
@@ -432,7 +455,7 @@ def inference(sentence):
 
 
 if __name__ == "__main__":
-    # train()
+    train()
     inference("患者精神状况好，无发热，诉右髋部疼痛，饮食差，二便正常。")
     inference("腹叩移动性浊音阴性，肠鸣音正常，未闻及高调肠鸣音及气过水声。")
     inference("我腹部有点疼痛。")
