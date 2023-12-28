@@ -388,7 +388,7 @@ def train():
                                     id2label=id2label,
                                     label2id=label2id,
                                     )
-    lora_config = LoraConfig(r=10)
+    lora_config = LoraConfig(r=10,task_type="TOKEN_CLS")
     logger.info(lora_config)
     model = get_peft_model(model, lora_config)
     logger.info(lora_config)

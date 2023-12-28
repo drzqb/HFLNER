@@ -2,14 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a2baeb92-07de-4da5-95c1-69a79c1fe5b1" name="默认更改列表" comment="">
-      <change afterPath="$PROJECT_DIR$/hflw2ner10.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/hflw2ner51.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/hflw2ner52.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/hflw2ner81.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/HFLNER.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/HFLNER.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/hflw2ner53.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hflw2ner51.py" beforeDir="false" afterPath="$PROJECT_DIR$/hflw2ner51.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hflw2ner52.py" beforeDir="false" afterPath="$PROJECT_DIR$/hflw2ner52.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,7 +45,7 @@
       <recent name="D:\pythonwork\HFLNER" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.hflw2ner10">
+  <component name="RunManager" selected="Python.utils">
     <configuration name="hflw2ner10" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="HFLNER" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -63,28 +60,6 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/hflw2ner10.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="hflw2ner4" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="HFLNER" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/hflw2ner4.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -159,13 +134,35 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="utils" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="HFLNER" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/utils.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.utils" />
         <item itemvalue="Python.hflw2ner10" />
         <item itemvalue="Python.hflw2ner81" />
         <item itemvalue="Python.hflw2ner8" />
         <item itemvalue="Python.hflw2ner7" />
-        <item itemvalue="Python.hflw2ner4" />
       </list>
     </recent_temporary>
   </component>
@@ -195,7 +192,10 @@
       <workItem from="1703405904730" duration="4884000" />
       <workItem from="1703422588232" duration="7297000" />
       <workItem from="1703469433120" duration="31812000" />
-      <workItem from="1703551827789" duration="11549000" />
+      <workItem from="1703551827789" duration="11798000" />
+      <workItem from="1703657822905" duration="2768000" />
+      <workItem from="1703684205700" duration="344000" />
+      <workItem from="1703729124671" duration="7856000" />
     </task>
     <servers />
   </component>
@@ -203,22 +203,22 @@
     <option name="version" value="2" />
   </component>
   <component name="WindowStateProjectService">
-    <state width="1334" height="297" key="GridCell.Tab.0.bottom" timestamp="1703267724876">
+    <state width="1334" height="297" key="GridCell.Tab.0.bottom" timestamp="1703735061019">
       <screen x="0" y="0" width="2752" height="1122" />
     </state>
-    <state width="1334" height="297" key="GridCell.Tab.0.bottom/0.0.2752.1122@0.0.2752.1122" timestamp="1703267724876" />
-    <state width="1334" height="297" key="GridCell.Tab.0.center" timestamp="1703267724876">
+    <state width="1334" height="297" key="GridCell.Tab.0.bottom/0.0.2752.1122@0.0.2752.1122" timestamp="1703735061019" />
+    <state width="1334" height="297" key="GridCell.Tab.0.center" timestamp="1703735061019">
       <screen x="0" y="0" width="2752" height="1122" />
     </state>
-    <state width="1334" height="297" key="GridCell.Tab.0.center/0.0.2752.1122@0.0.2752.1122" timestamp="1703267724876" />
-    <state width="1334" height="297" key="GridCell.Tab.0.left" timestamp="1703267724876">
+    <state width="1334" height="297" key="GridCell.Tab.0.center/0.0.2752.1122@0.0.2752.1122" timestamp="1703735061019" />
+    <state width="1334" height="297" key="GridCell.Tab.0.left" timestamp="1703735061019">
       <screen x="0" y="0" width="2752" height="1122" />
     </state>
-    <state width="1334" height="297" key="GridCell.Tab.0.left/0.0.2752.1122@0.0.2752.1122" timestamp="1703267724876" />
-    <state width="1334" height="297" key="GridCell.Tab.0.right" timestamp="1703267724876">
+    <state width="1334" height="297" key="GridCell.Tab.0.left/0.0.2752.1122@0.0.2752.1122" timestamp="1703735061019" />
+    <state width="1334" height="297" key="GridCell.Tab.0.right" timestamp="1703735061019">
       <screen x="0" y="0" width="2752" height="1122" />
     </state>
-    <state width="1334" height="297" key="GridCell.Tab.0.right/0.0.2752.1122@0.0.2752.1122" timestamp="1703267724876" />
+    <state width="1334" height="297" key="GridCell.Tab.0.right/0.0.2752.1122@0.0.2752.1122" timestamp="1703735061019" />
     <state x="1566" y="205" key="SettingsEditor" timestamp="1703225758679">
       <screen x="0" y="0" width="2752" height="1122" />
     </state>
@@ -228,6 +228,7 @@
     <SUITE FILE_PATH="coverage/HFLNER$hflw2ner7.coverage" NAME="hflw2ner7 Coverage Results" MODIFIED="1698217604108" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/HFLNER$hflw2ner1.coverage" NAME="hflw2ner1 Coverage Results" MODIFIED="1697213724217" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/HFLNER$hflw2ner4.coverage" NAME="hflw2ner4 Coverage Results" MODIFIED="1697264489549" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/HFLNER$utils.coverage" NAME="utils Coverage Results" MODIFIED="1703735061013" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/HFLNER$hflw2ner8.coverage" NAME="hflw2ner8 Coverage Results" MODIFIED="1703228641233" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/HFLNER$hflner1.coverage" NAME="hflner1 Coverage Results" MODIFIED="1697212469850" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/HFLNER$hflw2ner2.coverage" NAME="hflw2ner2 Coverage Results" MODIFIED="1697214907913" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />

@@ -2,7 +2,7 @@
     基于W2NER的命名实体识别统一框架
     可以处理FLAT、NESTED、DISCONTINUED三种
 
-    TrainingArguments、Trainer实现
+    TrainingArguments、Trainer、NEFTUNE实现
 '''
 
 from transformers import BertTokenizer, BertPreTrainedModel, BertModel, BitsAndBytesConfig
@@ -29,7 +29,7 @@ warnings.filterwarnings("ignore")
 checkpoint = "bert-base-chinese"
 device = 'cuda'
 
-mycheckpoint = "models/hflw2ner51"
+mycheckpoint = "models/hflw2ner53"
 if not os.path.exists(mycheckpoint):
     os.makedirs(mycheckpoint)
 
@@ -366,6 +366,7 @@ def train():
     logger.info(tokenizer)
 
     logger.info("开始读取数据...")
+
     dataset_train = MyDataset("data/train_filelist.txt")
     dataset_val = MyDataset("data/val_filelist.txt")
 
@@ -394,6 +395,7 @@ def train():
         max_grad_norm=1.0,
         save_strategy="no",
         fp16=True,
+        neftune_noise_alpha=5.0,
     )
 
     mytraincallback = MyTrainCallback(logger)
