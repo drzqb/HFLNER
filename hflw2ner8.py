@@ -6,6 +6,8 @@
     梯度按序列长度比率算术平均
 
     Lora微调
+
+    自定义for循环训练
 '''
 
 from transformers import BertTokenizer, BertPreTrainedModel, BertModel

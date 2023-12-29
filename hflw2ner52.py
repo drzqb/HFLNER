@@ -388,7 +388,7 @@ def train():
                                     id2label=id2label,
                                     label2id=label2id,
                                     )
-    lora_config = LoraConfig(r=10,task_type="TOKEN_CLS")
+    lora_config = LoraConfig(r=10)
     logger.info(lora_config)
     model = get_peft_model(model, lora_config)
     logger.info(lora_config)
@@ -418,6 +418,7 @@ def train():
         max_grad_norm=1.0,
         save_strategy="epoch",
         # fp16=True,
+        neftune_noise_alpha=5.0,
     )
 
     mytraincallback = MyTrainCallback(logger)
@@ -427,46 +428,15 @@ def train():
         args=training_args,
         train_dataset=dataset_train,
         data_collator=data_collator,
-        # callbacks=[mytraincallback],
+        callbacks=[mytraincallback],
     )
 
-    # trainer.callback_handler.eval_dataloader = DataLoader(dataset_val,
-    #                                                       batch_size,
-    #                                                       shuffle=False,
-    #                                                       collate_fn=data_collator)
+    trainer.callback_handler.eval_dataloader = DataLoader(dataset_val,
+                                                          batch_size,
+                                                          shuffle=False,
+                                                          collate_fn=data_collator)
     logger.info("开始训练...")
     trainer.train()
-
-    model.eval()
-    tp = 0
-    fn = 0
-    fp = 0
-
-    eval_dataloader = DataLoader(dataset_val,
-                                 batch_size,
-                                 shuffle=False,
-                                 collate_fn=data_collator)
-    for data in eval_dataloader:
-        with torch.no_grad():
-            res = model(data["input_ids"].to(device),
-                        data["attention_mask"].to(device),
-                        data["seqlen"].to(device),
-                        data["labels"].to(device),
-                        )
-
-        tp += res["tp"].item()
-        fn += res["fn"].item()
-        fp += res["fp"].item()
-
-    precision = tp / (tp + fp + 1.0e-6)
-    recall = tp / (tp + fn + 1.0e-6)
-    f1 = 2 * precision * recall / (precision + recall + 1.0e-6)
-
-    logger.info({
-        "precision": precision,
-        "recall": recall,
-        "f1": f1,
-    })
 
     logger.info("保存模型")
     model.save_pretrained(mycheckpoint)

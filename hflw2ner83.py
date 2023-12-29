@@ -6,7 +6,9 @@
     梯度按序列长度比率算术平均
 
     lora + 半精度float16
+
     自定义for循环训练
+    NEFTTUNE写在for循环前
 
     注意：自定义模型使用lora时使用torch.save保存模型权重model.state_dict()，不要使用model.save_pretrained，
     因为此时是peft保存模型的lora化部分，新添加的参数无法保存。
@@ -23,7 +25,7 @@ from tqdm import tqdm
 import torch, os
 import numpy as np
 from peft import get_peft_model, LoraConfig, TaskType, PeftModel, PeftConfig, prepare_model_for_kbit_training
-from utils import format_time, create_logger
+from utils import format_time, create_logger,neftune_post_forward_hook
 from dataclasses import dataclass
 import argparse
 import random
@@ -35,7 +37,7 @@ warnings.filterwarnings("ignore")
 checkpoint = "bert-base-chinese"
 device = 'cuda'
 
-mycheckpoint = "models/hflw2ner81"
+mycheckpoint = "models/hflw2ner83"
 if not os.path.exists(mycheckpoint):
     os.makedirs(mycheckpoint)
 
@@ -316,6 +318,10 @@ def train():
     logger.info("模型转化为peft model...")
     model = get_peft_model(model, lora_config).bfloat16()
     logger.info(lora_config)
+
+    logger.info("添加NEFTUNE模块...")
+    model.base_model.model.bert.embeddings.word_embeddings.neftune_noise_alpha = 0.1
+    model.base_model.model.bert.embeddings.word_embeddings.register_forward_hook(neftune_post_forward_hook)
 
     trainable_params, all_param = model.get_nb_trainable_parameters()
     logger.info(

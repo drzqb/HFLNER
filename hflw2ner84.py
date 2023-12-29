@@ -6,7 +6,9 @@
     梯度按序列长度比率算术平均
 
     lora + 半精度float16
+
     自定义for循环训练
+    NEFTTUNE写在模型定义里
 
     注意：自定义模型使用lora时使用torch.save保存模型权重model.state_dict()，不要使用model.save_pretrained，
     因为此时是peft保存模型的lora化部分，新添加的参数无法保存。
@@ -23,7 +25,7 @@ from tqdm import tqdm
 import torch, os
 import numpy as np
 from peft import get_peft_model, LoraConfig, TaskType, PeftModel, PeftConfig, prepare_model_for_kbit_training
-from utils import format_time, create_logger
+from utils import format_time, create_logger, NEFTune
 from dataclasses import dataclass
 import argparse
 import random
@@ -35,7 +37,7 @@ warnings.filterwarnings("ignore")
 checkpoint = "bert-base-chinese"
 device = 'cuda'
 
-mycheckpoint = "models/hflw2ner81"
+mycheckpoint = "models/hflw2ner84"
 if not os.path.exists(mycheckpoint):
     os.makedirs(mycheckpoint)
 
@@ -58,6 +60,8 @@ accum_steps = 2
 
 num_epochs = 20
 lr = 5e-3
+
+noise_alpha = 0.1
 
 
 class MyDataset(Dataset):
@@ -214,8 +218,16 @@ class MYW2NER(BertPreTrainedModel):
 
         self.init_weights()
 
-    def forward(self, input_ids, attention_mask, seqlen, lables=None):
-        out = self.bert(input_ids, attention_mask)
+    def forward(self, input_ids, attention_mask, seqlen, labels=None):
+        if self.training:
+            embeds = self.bert.embeddings.word_embeddings(input_ids)
+            dims = torch.tensor(embeds.size(1) * embeds.size(2))
+            mag_norm = noise_alpha / torch.sqrt(dims)
+            embeds = embeds + torch.zeros_like(embeds).uniform_(-mag_norm, mag_norm)
+
+            out = self.bert(None, attention_mask, inputs_embeds=embeds)
+        else:
+            out = self.bert(input_ids, attention_mask)
 
         out = self.dropout(out.last_hidden_state)
 
@@ -251,21 +263,21 @@ class MYW2NER(BertPreTrainedModel):
 
         predict *= val
 
-        if lables is not None:
+        if labels is not None:
             softmax = logits.softmax(dim=-1)
-            loss = focal_loss(lables, softmax)
+            loss = focal_loss(labels, softmax)
             loss *= val
 
             loss = torch.sum(loss)
 
             # 为实体，预测也为该实体
-            tp = torch.sum(torch.logical_and(torch.gt(lables, 0), torch.eq(predict, lables)))
+            tp = torch.sum(torch.logical_and(torch.gt(labels, 0), torch.eq(predict, labels)))
 
             # 为实体，预测错误
-            fn = torch.sum(torch.logical_and(torch.gt(lables, 0), torch.logical_not(torch.eq(predict, lables))))
+            fn = torch.sum(torch.logical_and(torch.gt(labels, 0), torch.logical_not(torch.eq(predict, labels))))
 
             # 非实体，预测为实体
-            fp = torch.sum(torch.logical_and(torch.eq(lables, 0), torch.gt(predict, 0)))
+            fp = torch.sum(torch.logical_and(torch.eq(labels, 0), torch.gt(predict, 0)))
 
             return {"loss": loss, "predict": predict, "tp": tp, "fn": fn, "fp": fp}
         else:
@@ -314,7 +326,7 @@ def train():
     logger.info(lora_config)
 
     logger.info("模型转化为peft model...")
-    model = get_peft_model(model, lora_config).bfloat16()
+    model = get_peft_model(model, lora_config)
     logger.info(lora_config)
 
     trainable_params, all_param = model.get_nb_trainable_parameters()
