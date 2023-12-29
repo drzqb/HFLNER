@@ -9,3 +9,4 @@
         hflw2ner53 TrainingArguments、Trainer、NEFTUNE实现
         hflw2ner6-7 基于梯度累积
         hflw2ner8/81 梯度累积 + LoRa微调
+        hflw2ner83/84 梯度累积 + LoRa微调 + NEFTUNE实现
